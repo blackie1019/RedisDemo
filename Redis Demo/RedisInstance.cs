@@ -1,8 +1,13 @@
-﻿using FX.Configuration.Attributes;
-using System.Collections.Generic;
-
-namespace RedisDemo
+﻿namespace RedisDemo
 {
+    #region
+
+    using System.Collections.Generic;
+
+    using FX.Configuration.Attributes;
+
+    #endregion
+
     public class RedisInstance
     {
         [JsonSetting]

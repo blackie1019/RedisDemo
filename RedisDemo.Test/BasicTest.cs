@@ -1,8 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using StackExchange.Redis;
-
-namespace RedisDemo.Test
+﻿namespace RedisDemo.Test
 {
+    #region
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using StackExchange.Redis;
+
+    #endregion
+
     [TestClass]
     public class BasicTest
     {
@@ -13,8 +18,9 @@ namespace RedisDemo.Test
             var testKey = "testkey";
             var testValue = "Hello World!!";
             var manager = RedisManager.Instance;
-            var redis = manager.CreateConnection(redisKey);
-            //var redis = ConnectionMultiplexer.Connect("192.168.100.99:32768");
+            //var redis = manager.CreateConnection(redisKey);
+
+            var redis = ConnectionMultiplexer.Connect("172.16.45.34:6400");
             var db = redis.GetDatabase();
 
             db.StringSet(testKey, testValue);
@@ -22,7 +28,6 @@ namespace RedisDemo.Test
             var actual = db.StringGet(testKey);
 
             Assert.AreEqual(expected, actual);
-
         }
     }
 }
