@@ -1,23 +1,27 @@
 ﻿namespace RedisDemo
 {
+    using Model;
+    using Enums;
+
     #region
 
+    using StackExchange.Redis;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-    using StackExchange.Redis;
 
     #endregion
 
     public class RedisManager
     {
         private static readonly Lazy<RedisManager> lazyInstance = new Lazy<RedisManager>(() => new RedisManager());
+        private Dictionary<string,ConnectionMultiplexer> activeConnectionMultiplexers { get; }
+        private List<RedisConfigurationGroup> configurationGroupList { get; }
 
         private RedisManager()
         {
-            this.Configuration = new RedisConfiguration();
-            this.ConfigurationOptionsList = this.ConvertToConfigurationOptions();
+            this.activeConnectionMultiplexers = new Dictionary<string, ConnectionMultiplexer>();
+            this.configurationGroupList = this.PacketConfigurationGroup();
         }
 
         public static RedisManager Instance
@@ -28,132 +32,61 @@
             }
         }
 
-        private RedisConfiguration Configuration { get; }
-
-        private List<RedisConfigurationOption> ConfigurationOptionsList { get; }
-
-        public ConnectionMultiplexer CreateConnection(string key)
+        public IDatabase GetDatabase(GroupTypeEnum type,string key)
         {
-            var config = this.ConfigurationOptionsList.First(x => x.Key == key);
-            return ConnectionMultiplexer.Connect(config.ConfigurationOptions);
+            ConnectionMultiplexer redis;
+            if (activeConnectionMultiplexers.TryGetValue(ConvertMultiplexerKey(type, key), out redis) && redis.IsConnected)
+            {
+
+            }
+            else
+            {
+                var config = this.configurationGroupList.First(g => g.Type == type).ConfigurationOptionsList.First(c => c.Key.ToLower() == key.ToLower());
+                if (redis == null)
+                {
+                    redis = ConnectionMultiplexer.Connect(config.ConfigurationOptions);
+                    activeConnectionMultiplexers.Add(ConvertMultiplexerKey(type, key), redis);
+                }
+                else
+                {
+                    redis = ConnectionMultiplexer.Connect(config.ConfigurationOptions);
+                    activeConnectionMultiplexers[ConvertMultiplexerKey(type, key)] = redis;
+                }                
+            }
+            return redis.GetDatabase();
         }
 
         #region private
 
-        private List<RedisConfigurationOption> ConvertToConfigurationOptions()
+        private string ConvertMultiplexerKey(GroupTypeEnum type, string key)
         {
-            var result = new List<RedisConfigurationOption>();
+            return type + key;
+        }
 
-            foreach (var instance in this.Configuration.RedisInstances)
-            {
-                var redisOption = new RedisConfigurationOption
-                                      {
-                                          Key = instance.Key, 
-                                          ConfigurationOptions =
-                                              new ConfigurationOptions
-                                                  {
-                                                      AbortOnConnectFail =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .AbortOnConnectFail, 
-                                                      AllowAdmin =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .AllowAdmin, 
-                                                      ChannelPrefix =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .ChannelPrefix, 
-                                                      ClientName =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .ClientName, 
-                                                      ConfigurationChannel =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .ConfigurationChannel, 
-                                                      ConnectRetry =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .ConnectRetry, 
-                                                      ConnectTimeout =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .ConnectTimeout, 
-                                                      DefaultDatabase =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .DefaultDatabase, 
-                                                      DefaultVersion =
-                                                          string
-                                                              .IsNullOrEmpty
-                                                              (
-                                                                  instance
-                                                              .ConfigurationOptions
-                                                              .Proxy)
-                                                              ? null
-                                                              : new Version(
-                                                                    instance
-                                                                    .ConfigurationOptions
-                                                                    .DefaultVersion), 
-                                                      KeepAlive =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .KeepAlive, 
-                                                      Password =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .Password, 
-                                                      ResolveDns =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .ResolveDns, 
-                                                      ServiceName =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .ServiceName, 
-                                                      Ssl =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .Ssl, 
-                                                      SslHost =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .SslHost, 
-                                                      SyncTimeout =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .SyncTimeout, 
-                                                      TieBreaker =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .TieBreaker, 
-                                                      WriteBuffer =
-                                                          instance
-                                                          .ConfigurationOptions
-                                                          .WriteBuffer
-                                                  }
-                                      };
+        private List<RedisConfigurationGroup> PacketConfigurationGroup()
+        {
+            var result = new List<RedisConfigurationGroup>();
+            var configuraion =new RedisConfiguration();
 
-                if (!string.IsNullOrEmpty(instance.ConfigurationOptions.Proxy))
-                {
-                    redisOption.ConfigurationOptions.Proxy = Proxy.Twemproxy;
-                }
-
-                this.UpdateEndPoints(instance.EndPoints, ref redisOption);
-                result.Add(redisOption);
-            }
+            configuraion.RedisInstanceGroups.ForEach(g => result.Add(ConstructConfigurationGroup(g)));
 
             return result;
         }
 
-        private void UpdateEndPoints(List<RedisEndPoint> endPoints, ref RedisConfigurationOption redisOption)
+        private RedisConfigurationGroup ConstructConfigurationGroup(RedisInstanceGroup instanceGroup)
         {
-            foreach (var endPoint in endPoints)
+            var groupType = (GroupTypeEnum)Enum.Parse(typeof(GroupTypeEnum), instanceGroup.Type);
+            var result = new RedisConfigurationGroup(groupType);
+            foreach (var instance in instanceGroup.EndPoints)
             {
-                redisOption.ConfigurationOptions.EndPoints.Add(
-                    string.Format("{{{0},{1}}}", endPoint.Name, endPoint.Port));
+                var redisOption = new RedisConfigurationOption
+                {
+                    Key = instance.Name,
+                    ConfigurationOptions = ConfigurationOptions.Parse(instance.ConnectionSetting)
+                };
+                result.ConfigurationOptionsList.Add(redisOption);
             }
+            return result;
         }
 
         #endregion

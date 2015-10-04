@@ -1,35 +1,36 @@
 ﻿{
-  "RedisInstances": [
+  "RedisInstanceGroups": [
     {
-      "Key" : "redis01",
+      "Type": "Cache",
       "EndPoints": [
         {
-          "Name": "192.168.99.100",
-          "Port": "32768",
-          "Auth": ""
+          "Name": "redis01",
+          "ConnectionSetting": "192.168.99.100:6379, syncTimeout=6000"
         }
-      ],
-      "ConfigurationOptions": {
-        "AbortOnConnectFail": true,
-        "AllowAdmin": true,
-        "ChannelPrefix": "",
-        "ClientName": "",
-        "ConfigurationChannel": "",
-        "ConnectRetry": 10,
-        "ConnectTimeout": 3000,
-        "DefaultDatabase": 0,
-        "DefaultVersion": "",
-        "KeepAlive": "30",
-        "Password": "",
-        "Proxy": "",
-        "ResolveDns": false,
-        "ServiceName": "",
-        "Ssl": false,
-        "SslHost": "",
-        "SyncTimeout": 30,
-        "TieBreaker": "",
-        "WriteBuffer": -1
-      }
+      ]
+    },
+    {
+      "Type": "Session",
+      "EndPoints": [
+        {
+          "Name": "redis01",
+          "ConnectionSetting": "192.168.99.100:6379, syncTimeout=6000"
+        }
+      ]
+    }
+    ,
+    {
+      "Type": "Messaging",
+      "EndPoints": [
+        {
+          "Name": "redis02",
+          "ConnectionSetting": "192.168.99.100:6381, syncTimeout=6000"
+        },
+        {
+          "Name": "redis03",
+          "ConnectionSetting": "192.168.99.100:6382, syncTimeout=6000"
+        }
+      ]
     }
   ]
 }

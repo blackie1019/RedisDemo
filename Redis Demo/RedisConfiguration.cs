@@ -2,19 +2,18 @@
 {
     #region
 
+    using FX.Configuration;
+    using Model;
     using System;
     using System.Collections.Generic;
-
-    using FX.Configuration;
-    using FX.Configuration.Attributes;
 
     #endregion
 
     public class RedisConfiguration : JsonConfiguration
     {
         private static readonly string FilePath = string.Format(
-            "{0}{1}", 
-            AppDomain.CurrentDomain.BaseDirectory, 
+            "{0}{1}",
+            AppDomain.CurrentDomain.BaseDirectory,
             @"\Configuration\RedisConfiguration.json");
 
         public RedisConfiguration()
@@ -22,7 +21,6 @@
         {
         }
 
-        [JsonSetting]
-        public List<RedisInstance> RedisInstances { get; set; }
+        public List<RedisInstanceGroup> RedisInstanceGroups { get; set; }
     }
 }
