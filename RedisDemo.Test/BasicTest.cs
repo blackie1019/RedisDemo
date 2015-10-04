@@ -19,13 +19,14 @@
             var testValue = "Hello World!!";
             var manager = RedisManager.Instance;
             //var redis = manager.CreateConnection(redisKey);
+            
+            var redis = ConnectionMultiplexer.Connect(ConfigurationOptions.Parse("172.16.45.34:6379"));
 
-            var redis = ConnectionMultiplexer.Connect("172.16.45.34:6400");
             var db = redis.GetDatabase();
 
             db.StringSet(testKey, testValue);
             var expected = testValue;
-            var actual = db.StringGet(testKey);
+            var actual = db.StringGet(testKey).ToString();
 
             Assert.AreEqual(expected, actual);
         }
