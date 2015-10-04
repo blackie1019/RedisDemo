@@ -1,0 +1,35 @@
+﻿{
+  "RedisInstances": [
+    {
+      "Key" : "redis01",
+      "EndPoints": [
+        {
+          "Name": "192.168.99.100",
+          "Port": "32768",
+          "Auth": ""
+        }
+      ],
+      "ConfigurationOptions": {
+        "AbortOnConnectFail": true,
+        "AllowAdmin": true,
+        "ChannelPrefix": "",
+        "ClientName": "",
+        "ConfigurationChannel": "",
+        "ConnectRetry": 10,
+        "ConnectTimeout": 3000,
+        "DefaultDatabase": 0,
+        "DefaultVersion": "",
+        "KeepAlive": "30",
+        "Password": "",
+        "Proxy": "",
+        "ResolveDns": false,
+        "ServiceName": "",
+        "Ssl": false,
+        "SslHost": "",
+        "SyncTimeout": 30,
+        "TieBreaker": "",
+        "WriteBuffer": -1
+      }
+    }
+  ]
+}
