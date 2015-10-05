@@ -3,7 +3,6 @@
     public enum GroupTypeEnum
     {
         Cache = 1,
-        Session = 2,
-        Messaging = 3,
+        Messaging = 2
     }
 }

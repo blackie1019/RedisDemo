@@ -14,7 +14,7 @@
         private static readonly string FilePath = string.Format(
             "{0}{1}",
             AppDomain.CurrentDomain.BaseDirectory,
-            @"\Configuration\RedisConfiguration.json");
+            @"\Configuration\CachingConfiguration.json");
 
         public RedisConfiguration()
             : base(FilePath)

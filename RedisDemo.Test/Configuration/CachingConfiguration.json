@@ -1,0 +1,26 @@
+﻿{
+    "RedisInstanceGroups": [
+        {
+            "Type": "Cache",
+            "EndPoints": [
+                {
+                    "Name": "redis01",
+                    "ConnectionSetting": "172.16.45.34:6380,password=rtxredis, syncTimeout=6000"
+                }
+            ]
+        },
+        {
+            "Type": "Messaging",
+            "EndPoints": [
+                {
+                    "Name": "redis02",
+                    "ConnectionSetting": "192.168.99.100:6381, syncTimeout=6000"
+                },
+                {
+                    "Name": "redis03",
+                    "ConnectionSetting": "192.168.99.100:6382, syncTimeout=6000"
+                }
+            ]
+        }
+    ]
+}
