@@ -1,5 +1,11 @@
 #Redis Singleton pattern framework with StackExchange.Redis
 
+Redis Introduction and customized framework base on StackExchange.Redis but update to using singleton pattern and JSON 
+Configuration Mapping with Redis Instance Group and Name concept. 
+
+Please reference to 
+[Redis Tutoring ](http://www.slideshare.net/chentientsai/redis-tutoring) of SlideShare.
+
 ##Features
 
 - Connection Mapping with Configuration
@@ -15,6 +21,8 @@
 
 ##Setup with Dockerizing a Redis service
 
+![Docker UI](https://github.com/blackie1019/RedisDemo/blob/master/README/Docker%20UI.png)
+
 1. Enable Virtualization Technology on Bios and install Docker Toolbox
 2. Create a Docker container for Redis
 3. Run the service
@@ -29,9 +37,16 @@ Detail Reference of [Dockerizing a Redis service](https://docs.docker.com/exampl
 
 ##How to Use
 
-###
+### Setting up Configuration
+
 ConnectionSetting follow StackExchange.Redis
-ConfigurationOptions.Parse()
+And other reference to ConfigurationOptions.Parse() of StackExchange.Redis
+
+![Conf](https://github.com/blackie1019/RedisDemo/blob/master/README/Config.png)
+
+### Sample
+
+![Code Snipet](https://github.com/blackie1019/RedisDemo/blob/master/README/Code%20Snipet.png)
 
 ### Example wtih Unit Test
 - Example – Basic 
@@ -48,5 +63,3 @@ ConfigurationOptions.Parse()
 	- Pipelines
 	- Batch
 - Example – Scripting
-
-#Redis Tutoring
