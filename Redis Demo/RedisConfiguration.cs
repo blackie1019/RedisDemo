@@ -2,10 +2,12 @@
 {
     #region
 
-    using FX.Configuration;
-    using Model;
     using System;
     using System.Collections.Generic;
+
+    using FX.Configuration;
+
+    using RedisDemo.Models;
 
     #endregion
 

@@ -1,6 +1,7 @@
-﻿namespace RedisDemo.Model
+﻿namespace RedisDemo.Models
 {
     using Enums;
+
     #region
 
     using System.Collections.Generic;

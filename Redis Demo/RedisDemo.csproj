@@ -53,13 +53,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\GroupTypeEnum.cs" />
-    <Compile Include="Model\RedisConfigurationGroup.cs" />
+    <Compile Include="Models\RedisConfigurationGroup.cs" />
     <Compile Include="RedisConfiguration.cs" />
-    <Compile Include="Model\RedisConfigurationOption.cs" />
-    <Compile Include="RedisManager.cs" />
+    <Compile Include="Models\RedisConfigurationOption.cs" />
+    <Compile Include="RedisConnectionFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Model\RedisEndPoint.cs" />
-    <Compile Include="Model\RedisInstanceGroup.cs" />
+    <Compile Include="Models\RedisEndPoint.cs" />
+    <Compile Include="Models\RedisInstanceGroup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

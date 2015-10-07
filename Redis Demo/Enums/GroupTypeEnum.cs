@@ -2,7 +2,7 @@
 {
     public enum GroupTypeEnum
     {
-        Cache = 1,
-        Messaging = 2
+        Cache,
+        Messaging
     }
 }

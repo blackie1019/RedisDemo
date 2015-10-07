@@ -1,4 +1,4 @@
-﻿namespace RedisDemo.Model
+﻿namespace RedisDemo.Models
 {
     #region
 
