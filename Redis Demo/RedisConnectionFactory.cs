@@ -10,8 +10,6 @@
 
     using Models;
 
-    using RedisDemo.Model;
-
     using StackExchange.Redis;
 
     #endregion
